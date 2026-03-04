@@ -21,10 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 Updated for InkScape 1.0 by Leon Palnau 4/15/2021
 Updated for InkScape 1.2 by Michael Breu 12/04/2022
+Updated for InkScape 1.4.3 compatibility 03/04/2026
 """
 
 
-__version__ = "1.0" 
+__version__ = "1.1" 
 
 from boxmakerNLib import BoxMaker
 # Create effect instance and apply it.

@@ -21,12 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 Updated for InkScape 1.0 by Leon Palnau 4/15/2021
 Updated for InkScape 1.2 by Michael Breu 12/04/2022
+Updated for InkScape 1.4.3 compatibility 03/04/2026
 """
 
-__version__ = "1.0"
+__version__ = "1.1"
 
 from datetime import datetime
-import sys, inkex, simplestyle, gettext
+import sys, inkex, gettext
 import math, abc
 from lxml import etree
 
@@ -36,8 +37,8 @@ _ = gettext.gettext
 def draw_line(parent, XYstring):  # Draw lines from a list
     name = 'part'
     style = {'stroke': '#000000', 'fill': 'none', 'stroke-width': self.svg.unittouu("0.1 mm")}
-    drw = {'style': simplestyle.formatStyle(style), inkex.addNS('label', 'inkscape'): name, 'd': XYstring}
-    etree.SubElement(parent, inkex.addNS('path', 'svg'), drw)
+    drw = {'style': str(inkex.Style(style)), 'inkscape:label': name, 'd': XYstring}
+    etree.SubElement(parent, 'path', drw)
     return
 
 
@@ -853,7 +854,7 @@ class BoxMaker(inkex.Effect):
     def insertText(self, text, position, color='black'):
         style = {'stroke': color, 'stroke-width': self.svg.unittouu("0.1 mm"), 'font-size': '3px'}
         drw = {'style': str(inkex.Style(style)), 'x': '%f' % position.x, 'y': '%f' % position.y}
-        text_node = etree.SubElement(self.parent, inkex.addNS('text', 'svg'), drw)
+        text_node = etree.SubElement(self.parent, 'text', drw)
         text_node.text = text
 
     def insertPath(self, path, color='black'):
@@ -861,12 +862,12 @@ class BoxMaker(inkex.Effect):
         actions = path.translateToSVGd()
         #    inkex.debug(' actions %s'%actions)
         drw = {'style': str(inkex.Style(style)), 'd': actions}
-        edge = etree.SubElement(self.parent, inkex.addNS('path', 'svg'), drw)
+        edge = etree.SubElement(self.parent, 'path', drw)
 
     def insertCircle(self, r, center, color='black'):
         style = {'stroke': color, 'fill': 'none', 'stroke-width': self.svg.unittouu("0.1 mm")}
         drw = {'style': str(inkex.Style(style)), 'cx': '%f' % center.x, 'cy': '%f' % center.y, 'r': '%f' % r}
-        edge = etree.SubElement(self.parent, inkex.addNS('circle', 'svg'), drw)
+        edge = etree.SubElement(self.parent, 'circle', drw)
 
     def toSVGString(self):
         return "a %f %f 0 1 1 %f %f" % (self.r, self.r, self.endPoint.x, self.endPoint.y)
@@ -888,13 +889,13 @@ class BoxMaker(inkex.Effect):
             self.markerCount += 1
             style = {'stroke': color, 'fill': 'none', 'stroke-width': self.svg.unittouu("2 mm")}
             drw = {'style': str(inkex.Style(style)), 'cx': '%f' % center.x, 'cy': '%f' % center.y, 'r': '4'}
-            etree.SubElement(self.parent, inkex.addNS('circle', 'svg'), drw)
+            etree.SubElement(self.parent, 'circle', drw)
 
             style = {'stroke': 'black', 'stroke-width': self.svg.unittouu("0.1 mm"), 'font-size': '3px'}
             drw = {'style': str(inkex.Style(style)), 'x': '%f' % (center.x + 5.0), 'y': '%f' % (center.y + 5),
                    'r': '4'}
             #      inkex.debug("Text: %s" % drw)
-            text_node = etree.SubElement(self.parent, inkex.addNS('text', 'svg'), drw)
+            text_node = etree.SubElement(self.parent, 'text', drw)
             text_node.text = '%s: (%.2f,%.2f)' % (self.markerCount, center.x, center.y)
 
     def boxFrames(self, length, direction, inverse=False, depth=None):
